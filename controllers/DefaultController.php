@@ -46,12 +46,13 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        return $this->renderContent('В разработке');
-        $searchModel = new DrupalUsersSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+//        return $this->renderContent('В разработке');
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => (Yii::$app->userBalance->userModel)::find(),
+        ]);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
