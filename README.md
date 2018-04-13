@@ -37,7 +37,7 @@ Add below lines to 'components' section:
 ```
 'userBalance' => [
     'class' => \pantera\user\balance\Component::class,
-    'userModel' => 'pantera\YiiYii2User\models\User',
+    'userModel' => 'path-to-your-user-module\models\User',
 ],
 ```
  
