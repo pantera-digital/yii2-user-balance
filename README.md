@@ -33,5 +33,14 @@ php yii migrate --migrationPath=vendor/pantera/user/balance/migrations
 
 Usage
 ---------------------------------
-
+//Add below lines to components array
+'userBalance' => [
+            'class' => \pantera\user\balance\Component::class,
+            'userModel' => 'pantera\YiiYii2User\models\User',
+        ],
+//And add this to modules array
+'user-balance' => [
+            'class' => \pantera\user\balance\Module::class,
+        ]
+    
 ...
