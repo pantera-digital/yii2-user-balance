@@ -6,12 +6,12 @@ class m170614_052804_init_balance_tables extends Migration
 {
     public function safeUp()
     {
-        $this->createTable('users_balance',[
+        $this->createTable('{{%users_balance}}', [
             'user_id' => $this->primaryKey(),
             'balance' => $this->decimal(10,2),
         ]);
 
-        $this->createTable('users_balance_history',[
+        $this->createTable('{{%users_balance_history}}',[
             'id' => $this->primaryKey(),
             'user_id' => $this->integer(),
             'sum' => $this->decimal(10,2),

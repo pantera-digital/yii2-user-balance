@@ -21,8 +21,9 @@ class UsersBalanceHistory extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'users_balance_history';
+        return '{{%users_balance_history}}';
     }
+
     public function beforeSave($insert)
     {
         if($this->isNewRecord && empty($this->comment)){

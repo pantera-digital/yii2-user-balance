@@ -2,9 +2,8 @@
 
 namespace pantera\user\balance\models;
 
-use phpDocumentor\Reflection\Types\Integer;
-use Yii;
 use yii\base\Exception;
+use Yii;
 
 /**
  * This is the model class for table "users_balance".
@@ -15,6 +14,7 @@ use yii\base\Exception;
 class UsersBalance extends \yii\db\ActiveRecord
 {
     public $income_money;
+
     public $comment;
 
     /**
@@ -22,10 +22,11 @@ class UsersBalance extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'users_balance';
+        return '{{%users_balance}}';
     }
 
-    public function income($incoming) {
+    public function income($incoming)
+    {
         if(!empty($incoming)) {
             $this->balance = $this->balance + $incoming;
             return $this;
