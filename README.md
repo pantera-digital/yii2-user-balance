@@ -1,7 +1,5 @@
 # yii2-user-balance
 
-==========
-
 User balance module for Yii2 apps
 
 Install
@@ -28,19 +26,25 @@ php composer update
 Migrations:
 
 ```
-php yii migrate --migrationPath=vendor/pantera/user/balance/migrations
+php yii migrate --migrationPath=vendor/pantera-digital/yii2-user-balance/migrations
 ```
 
 Usage
 ---------------------------------
-//Add below lines to components array
+
+Add below lines to 'components' section:
+
+```
 'userBalance' => [
-            'class' => \pantera\user\balance\Component::class,
-            'userModel' => 'pantera\YiiYii2User\models\User',
-        ],
-//And add this to modules array
+    'class' => \pantera\user\balance\Component::class,
+    'userModel' => 'pantera\YiiYii2User\models\User',
+],
+```
+ 
+And add this to 'modules' section:
+
+```
 'user-balance' => [
-            'class' => \pantera\user\balance\Module::class,
-        ]
-    
-...
+    'class' => \pantera\user\balance\Module::class,
+]
+```
