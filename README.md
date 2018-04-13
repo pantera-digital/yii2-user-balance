@@ -1,7 +1,5 @@
 # yii2-user-balance
 
-==========
-
 User balance module for Yii2 apps
 
 Install
