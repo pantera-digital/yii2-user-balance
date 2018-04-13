@@ -1,0 +1,9 @@
+{
+  "name": "pantera-digital/yii2-user-balance",
+  "type": "yii2-extension",
+  "autoload": {
+    "psr-4": {
+      "pantera\\user\\balance\\": ""
+    }
+  }
+}
