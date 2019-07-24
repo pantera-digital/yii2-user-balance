@@ -44,7 +44,6 @@ class UsersBalance extends \yii\db\ActiveRecord
             [['balance','income_money'], 'number'],
             [['income_money'],'required'],
             [['comment'], 'safe']
-
         ];
     }
 

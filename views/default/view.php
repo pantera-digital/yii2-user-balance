@@ -1,12 +1,13 @@
 <?php
 
+use yii\db\ActiveRecord;
 use yii\helpers\Html;
+use yii\web\View;
 use yii\widgets\DetailView;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\DrupalUsers */
-
-//$this->title = $model->name;
+/* @var $this View */
+/* @var $model ActiveRecord */
+$this->title = $model->getPrimaryKey();
 $this->params['breadcrumbs'][] = ['label' => 'Пользователи', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -19,9 +20,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="panel-heading">
                     <strong>Информация о пользователе</strong>
                 </div>
-                    <?= DetailView::widget([
-                        'model' => $model,
-                    ]) ?>
+                <?= DetailView::widget([
+                    'model' => $model,
+                    'attributes' => array_merge($model->attributes(), [[
+                        'label' => 'Баланс',
+                        'value' => Yii::$app->userBalance->getBalance($model),
+                    ]]),
+                ]) ?>
             </div>
         </div>
         <div class="col-md-6">

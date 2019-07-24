@@ -1,60 +1,36 @@
 <?php
 
-use yii\helpers\Html;
+use yii\data\ActiveDataProvider;
+use yii\db\ActiveRecord;
 use yii\grid\GridView;
+use yii\helpers\Html;
+use yii\web\View;
 
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\DrupalUsersSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $this View */
+/* @var $dataProvider ActiveDataProvider */
 
 $this->title = 'Пользователи';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="drupal-users-index">
-
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-
-
     <?= GridView::widget([
         'summary' => false,
         'dataProvider' => $dataProvider,
         'columns' => [
-                'username',
-
-//            ['class' => 'yii\grid\SerialColumn'],
-
-//            'uid',
-//            'name',
-//            'pass',
-//            'mail',
-//            [
-//                'attribute' =>  'userBalance.balance',
-//                'value' => function($data){
-//                        return !empty($data->userBalance->balance) ? $data->userBalance->balance : '0.00';
-//                }
-//            ],
-
-//            'theme',
-            // 'signature',
-            // 'signature_format',
-            // 'created',
-            // 'access',
-            // 'login',
-            // 'status',
-            // 'timezone',
-            // 'language',
-            // 'picture',
-            // 'init',
-            // 'data',
-
+            'username',
+            [
+                'header' => 'Баланс',
+                'value' => function (ActiveRecord $model) {
+                    return Yii::$app->userBalance->getBalance($model);
+                },
+            ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view}',
                 'buttons' => [
                     'view' => function ($url, $model, $key) {
-                        return  Html::a('Пополнить', $url)." | ".Html::a('История', $url);
+                        return Html::a('Пополнить', $url) . " | " . Html::a('История', $url);
                     }
                 ],
             ],
