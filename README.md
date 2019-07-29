@@ -46,5 +46,6 @@ And add this to 'modules' section:
 ```
 'user-balance' => [
     'class' => \pantera\user\balance\Module::class,
+    'access' => ['admin'], // by default 'access' => ['@']
 ]
 ```
