@@ -2,18 +2,16 @@
 
 namespace pantera\user\balance\controllers;
 
-use pantera\user\balance\models\UsersBalance;
 use pantera\user\balance\models\UsersBalanceHistory;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use Yii;
 
 /**
- * DrupalUsersController implements the CRUD actions for DrupalUsers model.
+ * DefaultController implements the CRUD actions for User model.
  */
-class DefaultController extends Controller
+class DefaultController extends \yii\web\Controller
 {
     /**
      * @inheritdoc
@@ -22,7 +20,7 @@ class DefaultController extends Controller
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
@@ -34,71 +32,42 @@ class DefaultController extends Controller
     }
 
     /**
-     * Lists all DrupalUsers models.
+     * Lists all User models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => (Yii::$app->userBalance->userModel)::find(),
-        ]);
-
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'dataProvider' => new ActiveDataProvider([
+                'query' => (Yii::$app->userBalance->userModel)::find(),
+            ]),
         ]);
     }
 
     /**
-     * Displays a single DrupalUsers model.
+     * Displays a single User model.
      * @param string $id
      * @return mixed
      */
     public function actionView($id)
     {
-        if (empty($id)) {
-            throw new NotFoundHttpException();
+        $balanceHistory = new UsersBalanceHistory([
+            'user_id' => $id
+        ]);
+
+        if ($balanceHistory->load(Yii::$app->request->post()) && $balanceHistory->save()) {
+            return $this->redirect(['view', 'id' => $id]);
         }
 
-        $userBalanceModel = UsersBalance::findOne(['user_id' => $id]);
-
-        if (empty($userBalanceModel)) {
-            $userBalanceModel = new UsersBalance();
-            $userBalanceModel->user_id = $id;
-            $userBalanceModel->balance = 0;
-            $userBalanceModel->income_money = 0;
-            $userBalanceModel->save();
-        }
-
-        $incoming = Yii::$app->request->post('UsersBalance')['income_money'];
-        $comment = Yii::$app->request->post('UsersBalance')['comment'];
-
-        if (empty($userBalanceModel)) {
-            $userBalanceModel =  new UsersBalance();
-        }
-
-        if (Yii::$app->request->isPost) {
-            $userBalanceModel->load(Yii::$app->request->post());
-            if ($userBalanceModel->income($incoming)->save()) {
-                $userBalanceHistory = new UsersBalanceHistory();
-                $userBalanceHistory->user_id = $id;
-                $userBalanceHistory->comment = $comment;
-                $userBalanceHistory->sum = $incoming;
-                if($userBalanceHistory->save()) {
-                    return $this->redirect(['view','id' => $id]);
-                }
-            }
-        }
-
-        $userBalanceModel = UsersBalance::findOne($id);
         $balanceHistoryProvider = new ActiveDataProvider([
             'query' => UsersBalanceHistory::find()->where(['user_id' => $id])->orderBy('created_at DESC'),
             'sort' => false,
         ]);
 
         return $this->render('view', [
-            'model' => $this->findModel($id),
-            'historyProvider' => $balanceHistoryProvider,
-            'balanceModel' => $userBalanceModel,
+            'user' => $this->findModel($id),
+            'balanceHistory' => $balanceHistory,
+            'balanceHistoryProvider' => $balanceHistoryProvider,
         ]);
     }
 

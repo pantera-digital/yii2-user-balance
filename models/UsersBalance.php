@@ -2,9 +2,6 @@
 
 namespace pantera\user\balance\models;
 
-use yii\base\Exception;
-use Yii;
-
 /**
  * This is the model class for table "users_balance".
  *
@@ -13,10 +10,6 @@ use Yii;
  */
 class UsersBalance extends \yii\db\ActiveRecord
 {
-    public $income_money;
-
-    public $comment;
-
     /**
      * @inheritdoc
      */
@@ -25,25 +18,14 @@ class UsersBalance extends \yii\db\ActiveRecord
         return '{{%users_balance}}';
     }
 
-    public function income($incoming)
-    {
-        if(!empty($incoming)) {
-            $this->balance = $this->balance + $incoming;
-            return $this;
-        } else {
-            throw new Exception('Trying to use income method with empty argument, please fill the incoming value argument');
-        }
-    }
-
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['balance','income_money'], 'number'],
-            [['income_money'],'required'],
-            [['comment'], 'safe']
+            [['user_id'], 'integer'],
+            [['balance'], 'number'],
         ];
     }
 
