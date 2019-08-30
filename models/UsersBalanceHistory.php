@@ -16,6 +16,13 @@ use Yii;
  */
 class UsersBalanceHistory extends \yii\db\ActiveRecord
 {
+    const STATUS_INITIAL = 0;
+    const STATUS_CONFIRMED = 1;
+    const STATUS_DECLINED = -1;
+
+    const OPERATION_TYPE_INCREASE = 'operation_increase';
+    const OPERATION_TYPE_DECREASE = 'operation_decrease';
+
     /**
      * @inheritdoc
      */
@@ -35,8 +42,18 @@ class UsersBalanceHistory extends \yii\db\ActiveRecord
         if (!$balance) {
             $balance = new UsersBalance(['user_id' => $this->user_id]);
         }
-        $balance->balance = (new \yii\db\Query())->from(self::tableName())->where(['user_id' => $this->user_id])->sum('sum');
+        $balance->balance = (new \yii\db\Query())->from(self::tableName())->where(['user_id' => $this->user_id, 'status' => self::STATUS_CONFIRMED])->sum('sum');
         $balance->save();
+    }
+
+    public function getStatusName()
+    {
+        $statusNames = [
+            self::STATUS_INITIAL => 'В обработке',
+            self::STATUS_CONFIRMED => 'Оплачен',
+            self::STATUS_DECLINED => 'Отклонен',
+        ];
+        return $statusNames[$this->status];
     }
 
     /**

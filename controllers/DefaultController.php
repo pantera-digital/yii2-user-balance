@@ -52,7 +52,8 @@ class DefaultController extends \yii\web\Controller
     public function actionView($id)
     {
         $balanceHistory = new UsersBalanceHistory([
-            'user_id' => $id
+            'user_id' => $id,
+            'status' => UsersBalanceHistory::STATUS_CONFIRMED,
         ]);
 
         if ($balanceHistory->load(Yii::$app->request->post()) && $balanceHistory->save()) {

@@ -1,5 +1,6 @@
 <?php
 
+use pantera\user\balance\models\UsersBalanceHistory;
 use yii\db\ActiveRecord;
 use yii\helpers\Html;
 use yii\web\View;
@@ -54,9 +55,18 @@ $this->params['breadcrumbs'][] = $this->title;
                             'class' => 'table table-stripped',
                         ] ,
                         'dataProvider' => $balanceHistoryProvider,
+                        'rowOptions' => function($model){
+                            $classes = [
+                                UsersBalanceHistory::STATUS_INITIAL => 'warning',
+                                UsersBalanceHistory::STATUS_CONFIRMED => 'success',
+                                UsersBalanceHistory::STATUS_DECLINED => 'danger',
+                            ];
+                            return ['class' => $classes[$model->status]];
+                        },
                         'columns' => [
                             'created_at:datetime',
                             'sum',
+                            'statusName:text:Статус',
                             'comment:ntext',
                         ],
                     ]); ?>

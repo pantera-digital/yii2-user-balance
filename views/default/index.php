@@ -1,5 +1,6 @@
 <?php
 
+use pantera\user\balance\models\UsersBalanceHistory;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
 use yii\grid\GridView;
@@ -17,20 +18,52 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'summary' => false,
         'dataProvider' => $dataProvider,
+        'formatter' => [
+            'class' => 'yii\i18n\Formatter',
+            'nullDisplay' => '',
+        ],
         'columns' => [
-            'username',
+            'username:text:Пользователь',
             [
-                'header' => 'Баланс',
+                'header' => 'В обработке',
+                'headerOptions' => ['class' => 'text-center'],
+                'contentOptions' => ['class' => 'text-center warning'],
                 'value' => function (ActiveRecord $model) {
-                    return Yii::$app->userBalance->getBalance($model);
+                    return Yii::$app->userBalance->getBalance($model, UsersBalanceHistory::STATUS_INITIAL, UsersBalanceHistory::OPERATION_TYPE_INCREASE);
+                },
+            ],
+            [
+                'header' => 'Поступило',
+                'headerOptions' => ['class' => 'text-center'],
+                'contentOptions' => ['class' => 'text-center success'],
+                'value' => function (ActiveRecord $model) {
+                    return Yii::$app->userBalance->getBalance($model, UsersBalanceHistory::STATUS_CONFIRMED, UsersBalanceHistory::OPERATION_TYPE_INCREASE);
+                },
+            ],
+            [
+                'header' => 'Запрошено',
+                'headerOptions' => ['class' => 'text-center'],
+                'contentOptions' => ['class' => 'text-center warning'],
+                'value' => function (ActiveRecord $model) {
+                    return Yii::$app->userBalance->getBalance($model, UsersBalanceHistory::STATUS_INITIAL, UsersBalanceHistory::OPERATION_TYPE_DECREASE);
+                },
+            ],
+            [
+                'header' => 'Выплачено',
+                'headerOptions' => ['class' => 'text-center'],
+                'contentOptions' => ['class' => 'text-center success'],
+                'value' => function (ActiveRecord $model) {
+                    return Yii::$app->userBalance->getBalance($model, UsersBalanceHistory::STATUS_CONFIRMED, UsersBalanceHistory::OPERATION_TYPE_DECREASE);
                 },
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
+                'headerOptions' => ['class' => 'text-center'],
+                'contentOptions' => ['class' => 'text-center'],
                 'template' => '{view}',
                 'buttons' => [
                     'view' => function ($url, $model, $key) {
-                        return Html::a('Пополнить', $url) . " | " . Html::a('История', $url);
+                        return Html::a('Подробнее', $url);
                     }
                 ],
             ],

@@ -2,7 +2,7 @@
 
 namespace pantera\user\balance;
 
-use pantera\user\balance\models\UsersBalance;
+use pantera\user\balance\models\UsersBalanceHistory;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
 
@@ -20,11 +20,25 @@ class Component extends \yii\base\Component
         }
     }
 
-    public function getBalance(ActiveRecord $user)
+    public function getBalance(ActiveRecord $user, $status = UsersBalanceHistory::STATUS_CONFIRMED, $operationType = null)
     {
-        return UsersBalance::find()
-            ->select('balance')
-            ->andWhere(['=', 'user_id', $user->getPrimaryKey()])
-            ->scalar();
+        $condition = 'user_id = :user_id AND status = :status';
+        switch ($operationType) {
+            case UsersBalanceHistory::OPERATION_TYPE_INCREASE:
+                $condition .= ' AND sum > 0';
+            break;
+            case UsersBalanceHistory::OPERATION_TYPE_DECREASE:
+                $condition .= ' AND sum < 0';
+            break;
+        }
+
+        $params = [
+            ':user_id' => $user->getPrimaryKey(),
+            ':status' => $status,
+        ];
+
+        return (new \yii\db\Query())->from(UsersBalanceHistory::tableName())
+                    ->where($condition, $params)
+                    ->sum('sum');
     }
 }
